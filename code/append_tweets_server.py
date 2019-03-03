@@ -11,6 +11,7 @@ import re
 from datetime import datetime, timedelta
 import xml.etree.ElementTree as ET
 from xml.dom import minidom
+import fastText
 
 # search_results = [[]]
 # tweeno = 0
@@ -60,8 +61,10 @@ consumer_secret_list = ['p8KBxW0noCWc4ydX3NGVzsxFwWis5gPXvEkMwY4zJAeob99pPl',
 
 
 #Reading and writing paths
-path = '/disk/data/share/MTproject'
-pathwr = '/disk/data/share/MTproject'
+path = '/disk/data/share/MTproject/'
+pathwr = '/disk/data/share/MTproject/'
+
+langdetect = fastText.load_model('/disk/data/share/MTproject/fastText/langdetect.bin')
 
 # This is a basic listener that just prints received tweets to stdout.
 '''class StdOutListener(StreamListener):
@@ -168,7 +171,7 @@ for item in root.findall("category"):
 
                 # print('In for loop')
                 tweetext = str(tweet["full_text"])
-                # tweelan = str(tweet["lang"])
+                tweelan = str(tweet["lang"])
                 tweeid = str(tweet["id_str"])
 
                 # Parsing out the automated tweets
@@ -195,9 +198,10 @@ for item in root.findall("category"):
 
                         tweetext = tweetext.replace('\n','')
                         # print(tweetext)
-                        fastTextLang = tag_language(tweetext)[0]
+                        fastTextLang = tag_language(tweetext, langdetect)[0]
                         tn.text = tweetext
-                        tn.set('lang', str(fastTextLang)[11:14])
+                        tn.set('fastTextLang', str(fastTextLang)[11:14])
+                        tn.set('twitterLang', tweelan)
                         tn.set('id', tweeid)
                         # print('Appended to xml doc')
 
@@ -224,6 +228,7 @@ for item in root.findall("category"):
                 time.sleep(900)
 
 # tree.write(filenm)
-xmlstr = minidom.parseString(ET.tostring(root)).toprettyxml(indent="	")
+pretty_print = lambda root: '\n'.join([line for line in minidom.parseString(root).toprettyxml(indent="	").split('\n') if line.strip()])
+# xmlstr = minidom.parseString(ET.tostring(root)).toprettyxml(indent="	")
 with open(filenm, "w") as f:
-    f.write(xmlstr)
+    f.write(pretty_print(ET.tostring(root)))

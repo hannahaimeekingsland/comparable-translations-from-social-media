@@ -8,12 +8,17 @@ import datetime
 import fnmatch
 from language_tagger import tag_language
 from trending_videos_difference_server import difference
+import fastText
+
+# Load fastText language detection model
+langdetect = fastText.load_model('/disk/data/share/MTproject/fastText/langdetect.bin')
 
 categories = { '1' : 'Film & Animation', '2' : 'Cars & Vehicles', '10' : 'Music', '15' : 'Pets & Animals',
 		   '17' : 'Sport', '19' : 'Travel & Events', '20' : 'Gaming', '22' : 'People & Blogs', '23' : 'Comedy',
 		   '24' : 'Entertainment', '25' : 'News & Politics', '26' : 'How-to & Style', '27' : 'Education',
 		   '28' : 'Science & Technology', '29' : 'Non-profits & Activism'}
 
+# Lists all files in a 'category' directory
 def file_list(category_name, date):
 	files = []
 	filepath = r"/disk/data/share/MTproject/" + category_name + "/"
@@ -42,12 +47,13 @@ def xml_structure() :
 					url = ET.SubElement(video, "URL")
 					description = ET.SubElement(video, "description")
 					title.text = parsed_file[i]['Title']
-					title_lang = tag_language(parsed_file[i]['Title'])[0]
+					title_lang = tag_language(parsed_file[i]['Title'], langdetect)[0]
 					title.attrib['lang'] = str(title_lang)[11:14]
 					url.text = parsed_file[i]['URL']
 					description.text = parsed_file[i]['Description']
 					# ET.dump(video)
 			prev_add = []
+			# To delete duplicates
 			for i in range(1, len(files)):
 				add, take = difference(files[0], files[i], category_name)
 				if (i > 1) :
@@ -57,27 +63,24 @@ def xml_structure() :
 						parsed_file = json.load(f)
 						total1 = len(parsed_file)
 						for i in range(0, total1):
+							# Add only URLs that are different to previously seen URLs
 							if parsed_file[i]['URL'] in add:
 								video = ET.SubElement(category, "video")
 								title = ET.SubElement(video, "title")
-								title_lang = tag_language(parsed_file[i]['Title'])[0]
+								title_lang = tag_language(parsed_file[i]['Title'], langdetect)[0]
 								title.attrib['lang'] = str(title_lang)[11:14]
 								url = ET.SubElement(video, "URL")
 								description = ET.SubElement(video, "description")
 								title.text = parsed_file[i]['Title']
 								url.text = parsed_file[i]['URL']
 								description.text = parsed_file[i]['Description']
-								# ET.dump(video)
 				prev_add.extend(add)
-		# ET.dump(category)
-	 # ET.dump(data)
-    # tree = etree.ElementTree(data)
 	filepath = r"/disk/data/share/MTproject/"
-	xmlstr = minidom.parseString(ET.tostring(data)).toprettyxml(indent="	")
+	# Convert to minidom format to pretty print + encode properly
+	pretty_print = lambda data: '\n'.join([line for line in minidom.parseString(data).toprettyxml(indent="	").split('\n') if line.strip()])
+	# xmlstr = minidom.parseString(ET.tostring(data)).toprettyxml(indent="	")
 	with open(filepath + str(date) + ".xml", "w") as f:
-		f.write(xmlstr)
-	f.close()
-	# tree.write(filepath + str(date) + ".xml")
+		f.write(pretty_print(ET.tostring(data)))
 
 if __name__ == '__main__':
 	xml_structure()
