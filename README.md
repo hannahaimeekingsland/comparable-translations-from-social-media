@@ -71,16 +71,16 @@ A script that generates an XML file of all videos from all categories, at the en
 There is a cron job set up to run this script:
 
 ```
-45 23 * * * /disk/data/share/MTproject/py3/bin/python /disk/data/share/MTproject/xml_generation_server.py
+15 23 * * * /disk/data/share/MTproject/py3/bin/python /disk/data/share/MTproject/xml_generation_server.py
 
 ```
 
 ## append_tweets_server.py
 
-This script uses the Twitter Streaming API to continuously collect tweets for each video, until it has reached the maximum amount of tokens for one API key. It tags every tweet with the language of the tweet using the fastText model. There is a cron job set up to run every 3 hours, after the initial xml file generation. 
+This script uses the Twitter Streaming API to continuously collect tweets for each video, until it has reached the maximum amount of tokens for one API key. It tags every tweet with the language of the tweet using the fastText model. There is a cron job set up to run every hour, after the initial xml file generation. 
 
 ```
-0 02-23/3 * * * /disk/data/share/MTproject/py3/bin/python /disk/data/share/MTproject/append_tweets_server.py
+0 0-23 * * * /disk/data/share/MTproject/py3/bin/python /disk/data/share/MTproject/append_tweets_server.py
 
 ```
 
