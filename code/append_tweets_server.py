@@ -164,7 +164,7 @@ for item in root.findall("category"):
                 tweetsnode = video.find("tweets")
                 tlist = tweetsnode.findall("tweet")
                 for t in tlist:
-                    tweelist.append(t.text)
+                    tweelist.append(t.attrib['id'])
 
             # For all the tweets we got in the search results
             for tweet in search_results:
@@ -188,7 +188,7 @@ for item in root.findall("category"):
                     tnode = video.find("tweets")
 
                     # Either we don't have the tweet yet or we don't have tweets at all
-                    if tweetext not in tweelist or len(tweelist) == 0:
+                    if tweeid not in tweelist or len(tweelist) == 0:
                         tn = ET.SubElement(tnode, "tweet")
 
                         # Getting the number of tweets and updating them
@@ -196,7 +196,6 @@ for item in root.findall("category"):
                         tweecount += 1
                         tnode.set('number', str(tweecount))
 
-                        tweetext = tweetext.replace('\n','')
                         # print(tweetext)
                         fastTextLang = tag_language(tweetext, langdetect)[0]
                         tn.text = tweetext
