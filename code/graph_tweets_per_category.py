@@ -8,8 +8,9 @@ categories = { '1' : 'Film & Animation', '2' : 'Cars & Vehicles', '10' : 'Music'
                '28' : 'Science & Technology', '29' : 'Non-profits & Activism'}
 
 def amount_of_tweets(category_name):
-        print(category.findall('./video/tweets'))
-        return len(category.findall("./video/tweets/tweet"))
+    # Search XML file for all tweets under a particular category
+    print(category.findall('./video/tweets'))
+    return len(category.findall("./video/tweets/tweet"))
 
 def graph(category_dict) :
     fig, ax = plt.subplots(figsize=(10, 7))

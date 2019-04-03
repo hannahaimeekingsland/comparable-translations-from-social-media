@@ -17,7 +17,7 @@ def language_breakdown(video):
 
 
 def graph(final_dict, category_name) :
-
+    # Generate boxplot
     fig, ax = plt.subplots(figsize=(10, 7))
     pos = list(range(len(final_dict.keys()) + 1))
     print(pos)
@@ -45,7 +45,6 @@ def graph(final_dict, category_name) :
     ax.spines['bottom'].set_smart_bounds(True)
     # ax.spines['bottom'].set_position(('axes', -0.04))
     # ax.spines['left'].set_position(('axes', 0.0))
-    # i+=1
     plt.tight_layout()
     plt.show()
 
@@ -59,10 +58,14 @@ if __name__ == '__main__':
         video_dict = {}
         for video in category.findall("./video"):
             video_title = video.find('title').text.replace('\t', '').replace('\n', '')
+            # Generate a language breakdown per video
             video_dict[video_title] = language_breakdown(video)
 
         final_dict = {}
 
+        # Place languages and frequencies in another dictionary assessing them per video
+        # Dictionary looks like {en: [2,3,4,5], ko: [1,1]} where each entry in the list
+        # represents frequency for one video
         for title, lang_dict in video_dict.items() :
             if len(lang_dict) > 0 :
                 for key, value in lang_dict.items():
@@ -77,4 +80,3 @@ if __name__ == '__main__':
 
         print(category_name)
         graph(final_dict, category_name)
-    # graph(language_dict)

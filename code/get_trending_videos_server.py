@@ -100,7 +100,6 @@ def videos_list_most_popular(client, **kwargs):
   return response
 
 def video_categories_list():
-  # See full sample for function
   categories = { '1' : 'Film & Animation', '2' : 'Cars & Vehicles', '10' : 'Music', '15' : 'Pets & Animals',
             '17' : 'Sport', '19' : 'Travel & Events', '20' : 'Gaming', '22' : 'People & Blogs', '23' : 'Comedy',
             '24' : 'Entertainment', '25' : 'News & Politics', '26' : 'How-to & Style', '27' : 'Education',
@@ -109,6 +108,7 @@ def video_categories_list():
   return categories
 
 def write_video_info(response):
+    # Write video info to JSON file
     categories = video_categories_list()
     for i in range(0, len(response['items'])) :
         categoryId = response['items'][i]['snippet']['categoryId']
@@ -138,13 +138,12 @@ def write_video_info(response):
 
 
 if __name__ == '__main__':
-  # When running locally, disable OAuthlib's HTTPs verification. When
-  # running in production *do not* leave this option enabled.
   os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
   client = get_authenticated_service()
 
   video_categories = video_categories_list()
 
+# Get most international most popular chart
 for cat_id,cat_name in video_categories.items() :
    response = videos_list_most_popular(client,
      part='snippet,contentDetails,statistics',
@@ -155,6 +154,7 @@ for cat_id,cat_name in video_categories.items() :
 
    nextPageToken = write_video_info(response)
 
+   # Paging through results
    while nextPageToken:
      response = videos_list_most_popular(client,
        part='snippet,contentDetails,statistics',

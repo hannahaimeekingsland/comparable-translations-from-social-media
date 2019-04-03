@@ -21,7 +21,7 @@ if __name__ == '__main__':
     filenames = []
     for i in range(1, len(sys.argv)):
         filenames.append(sys.argv[i])
-    print(filenames)
+    # print(filenames)
     percentage = 0
     for filename in filenames:
         tree = ET.parse(r"/disk/data/share/MTproject/" + str(filename))

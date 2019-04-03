@@ -28,12 +28,14 @@ if __name__ == '__main__':
     filenames = []
     for i in range(1, len(sys.argv)) :
         filenames.append(sys.argv[i])
+    # Sort filenames in order of generation (oldest-youngest)
     filenames.sort()
     print(filenames)
     graph_dict = {}
     for category in categories.values() :
         percentages = []
         for f in range(0, len(filenames)) :
+            # Uses compare method from trending_videos_statistics_server to get percentage
             percentages.append(compare(filenames[0], filenames[f], category))
         graph_dict[category] = percentages
 

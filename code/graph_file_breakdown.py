@@ -17,6 +17,7 @@ def file_list(category_name, date):
         if str(date) in str(file_):
             files.append(file_)
     files.sort()
+    # Get all files in order 00:00 to 23:00 generated on this date
     return files
 
 def amount_of_videos(category_name, filenames):
@@ -29,7 +30,7 @@ def amount_of_videos(category_name, filenames):
             video_count = len(parsed_file)
             video_counts.append(video_count)
             avg_video_count = sum(video_counts) / len(filenames)
-
+    # Return average video count throughout all files collected
     return avg_video_count
 
 
@@ -60,6 +61,7 @@ def graph(avg_graph_dict) :
 if __name__ == '__main__':
     for i in range(1, len(sys.argv)):
         date = sys.argv[i]
+    # Input date that you wish to analyse all JSON files collected on
     avg_graph_dict = {}
     graph_dict = {}
     for category in categories.values() :

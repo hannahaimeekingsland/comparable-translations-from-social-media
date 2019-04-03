@@ -17,6 +17,7 @@ def language_breakdown(category):
                 language_dict[tweet.attrib['twitterLang']] += 1
             else:
                 language_dict[tweet.attrib['twitterLang']] = 1
+        # Build language-frequency dictionary
         dict_[(video_title, video.find('title').attrib['lang'])] = language_dict
     return dict_
 
@@ -32,11 +33,10 @@ if __name__ == '__main__':
         print(category.text)
         category.text = category.text.replace('\t', '').replace('\n', '')
         # if category.text == 'Music':
-        #     print('hello')
         dict_ = language_breakdown(category)
-        # print(dict_)
         for k, v in dict_.items() :
             freq_list = list(v.values())
+            # Report videos where one language is over the frequency threshold
             if (any(x>int(threshold) for x in freq_list)):
                 print(k)
                 print(dict_.get(k))

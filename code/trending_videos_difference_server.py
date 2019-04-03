@@ -14,14 +14,15 @@ def difference(file1, file2, category) :
     filepath = r"/disk/data/share/MTproject/" + category + "/"
     filename1 = os.path.join(filepath + str(file1))
     filename2 = os.path.join(filepath + str(file2))
+    # Determine which is the earlier/later file
     earlier_file = max(filename1, filename2)
     later_file = min(filename1, filename2)
     if (not os.path.exists(filename1)) :
         print(filename1 + ' does not exist for ' + category)
-        return 0
+        return 0, 0
     if (not os.path.exists(filename2)) :
         print(filename2 + ' does not exist for ' + category)
-        return 0
+        return 0, 0
     else:
         with open(earlier_file, 'r') as f:
             parsed_earlier = json.load(f)
@@ -34,23 +35,12 @@ def difference(file1, file2, category) :
     earlier_urls = []
     later_urls = []
     for dict_ in parsed_earlier:
-        earlier_urls.append(dict_['URL'])   
+        earlier_urls.append(dict_['URL'])
     for dict_ in parsed_later:
         later_urls.append(dict_['URL'])
 
     add = [x for x in later_urls if x not in earlier_urls]
     take = [x for x in earlier_urls if x not in later_urls]
-    # with open(earlier_file, 'r') as f:
-    #     parsed_earlier = json.load(f)
-    #     ##Doesn't work? - reimplement!!!
-
-
-
-    #     for line in difflib.unified_diff(earlier_urls, later_urls):
-    #         if (line[:2] == '+h') :
-    #             add.append(line[1:])
-    #         elif (line[:2] == '-h') :
-    #             take.append(line[1:])
 
     return add, take
 

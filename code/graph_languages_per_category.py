@@ -10,6 +10,7 @@ colours = ['yellow', 'springgreen', 'red', 'mediumvioletred', 'salmon', 'midnigh
 
 def language_breakdown(category_name):
     language_dict = {}
+    # Get all languages from each category and place in a frequency dictionary
     for tweet in category_name.findall("./video/tweets/tweet"):
         if tweet.attrib['twitterLang'] in language_dict :
             language_dict[tweet.attrib['twitterLang']] += 1

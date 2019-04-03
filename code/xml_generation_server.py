@@ -31,7 +31,7 @@ def file_list(category_name, date):
 def xml_structure() :
 	date = datetime.datetime.now().date()
 	data = ET.Element("data")
-	##Put all Youtube data into XML
+	# Put all Youtube data into XML
 	for category_name in categories.values() :
 		filepath = r"/disk/data/share/MTproject/" + category_name + "/"
 		category = ET.SubElement(data, "category")
